@@ -1,0 +1,8 @@
+config:
+  - name: Voidburn
+    jav_config_url: https://186.101.219.92/downloads/gateway-layout-test/jav_config.ws
+    revision: 241.1
+    game_server_port: 43596
+    modulus: "8135458c041451a66bea0e3305b111287357b92516ade9dc0796ae43d493897d489b704274b264b20962fb062f236b15fe5040f240d6887691f76a2ff41784b11de957f92c530b9b717ee4ead82228c4a594d015bcd07fa1cd870127f94d7e1717821346aa7256a087d2bd16e20e09c707745e6194efc5353fecc0d7fb2e488f"
+    export_binaries: false
+
