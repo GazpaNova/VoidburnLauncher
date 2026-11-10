@@ -4,26 +4,26 @@ Windows launcher source for connecting to the Voidburn game server with RuneLite
 
 ## Download
 
-Get [Voidburn 2.1.11 for Windows](https://github.com/GazpaNova/VoidburnLauncher/releases/tag/v2.1.11). Extract the ZIP and run **VoidburnSetup.exe**, then choose **Install and Play**. Use the Voidburn desktop shortcut for later sessions.
+Get [Voidburn 2.1.12 for Windows](https://github.com/GazpaNova/VoidburnLauncher/releases/tag/v2.1.12). Extract the ZIP and run **VoidburnSetup.exe**, then choose **Install and Play**. Use the Voidburn desktop shortcut for later sessions.
 
 The installer is unsigned in Windows. Hosting it here makes the source and release files available for review. Antivirus products can still flag the download.
 
 Check the release ZIP in PowerShell:
 
 ```powershell
-Get-FileHash .\Voidburn-2.1.11-Windows.zip -Algorithm SHA256
+Get-FileHash .\Voidburn-2.1.12-Windows.zip -Algorithm SHA256
 ```
 
 The ZIP should have this SHA-256:
 
 ```text
-81B69E8606BF564CA6A9BE21FB88007F0A6EE5829DDFFE81D2F3C360656ADBED
+A8F5E26D401B8BD64364F072D05B7EE96BF21CC93849BB1346AF5FB703C23A1B
 ```
 
 The extracted installer should have this SHA-256:
 
 ```text
-E6ED62A2D851E016875F57B1098D921FA211B45163C0B82F90B23B679B528BF2
+98AB0D222265C0FB1D33066350D3D8A5CA93DC8544AD479222C3B7417FB56EE2
 ```
 
 ## What the launcher does
@@ -46,6 +46,10 @@ New-Item -ItemType Directory -Force .\build | Out-Null
 The launcher build uses the checked-in JARs and YamlDotNet DLL as pinned inputs, so it can compile offline. [VoidburnBootstrap.java](VoidburnBootstrap.java) and [addons/](addons/) contain the Java sources for the bootstrap and bundled Voidburn add-ons. [BUILD-INPUTS.sha256](BUILD-INPUTS.sha256) lists the hashes of the bundled binary inputs. The C# build can produce a different EXE checksum because of compiler metadata. Use the release checksums above to verify the published download.
 
 Third-party projects and terms are listed in [Licenses.txt](Licenses.txt) and [the ASM notice](vendor/ASM-LICENSE.txt). See the original projects for [RSProx](https://github.com/blurite/rsprox), [RuneLite](https://github.com/runelite/runelite), and [YamlDotNet](https://github.com/aaubry/YamlDotNet).
+
+## Barrows puzzles
+
+Enable **Show Puzzle Answer** in RuneLite under **Barrows Brothers**. The bundled compatibility add-on retries after the puzzle window opens so the built-in overlay can highlight the answer as soon as the puzzle models arrive.
 
 ## Troubleshooting
 

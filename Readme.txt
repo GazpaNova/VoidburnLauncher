@@ -77,3 +77,6 @@ The RuneLite login screen now offers a Voidburn Sign in button. Enter your exist
 
 VERSION 2.1.8 - RESTORE THE ORIGINAL RUNELITE LOGIN SCREEN
 Removes the additional remembered-login panel and sign-in dialog introduced in 2.1.7. The launcher disables that specific addon before starting RuneLite, preserving its encrypted remembered-account file and existing plugin settings. RuneLite returns to its original login screen. Native Play now integration is not implemented in this release. The yellow top-screen ping display, Drop-All, Hiscores and layout fixes remain available. Close RuneLite and reopen the Voidburn shortcut to update.
+
+VERSION 2.1.12 - BARROWS PUZZLE HIGHLIGHT
+Barrows Brothers can highlight the answer after the puzzle shapes finish loading. Enable Show Puzzle Answer in Barrows Brothers and click the highlighted shape.

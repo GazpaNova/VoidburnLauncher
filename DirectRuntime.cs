@@ -109,6 +109,7 @@ static partial class Voidburn {
         if(!File.Exists(hiscoresPath)||Hash(File.ReadAllBytes(hiscoresPath))!=Hash(hiscoresAddon))File.WriteAllBytes(hiscoresPath,hiscoresAddon);
         InstallDropAllAddon(applicationDirectory);
         InstallPingAddon(applicationDirectory);
+        InstallBundledAddon(applicationDirectory,"VoidburnBarrows.jar","5BAA80BAE3456F3B7EC5BE6FE1C5E75C5290D0BA5A8336D98191160D67EB5B22");
         RetireLoginAddon(applicationDirectory);
         InstallBundledAddon(applicationDirectory,"LoginUtilities.jar","B25002304AB0027C04118BD087DDC88ACD0C2931EAFCCAC3EA955BB9BDD534D3");
         File.WriteAllText(Path.Combine(applicationDirectory,"runtime.location"),runtime,new UTF8Encoding(false));
