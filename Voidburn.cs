@@ -14,7 +14,7 @@ using YamlDotNet.RepresentationModel;
 
 [assembly: AssemblyTitle("Voidburn Setup and Launcher")]
 [assembly: AssemblyDescription("Installs RSProx and configures the Voidburn RuneLite connection")]
-[assembly: AssemblyVersion("2.1.12.0")]
+[assembly: AssemblyVersion("2.1.13.0")]
 
 static partial class Voidburn {
     internal const string Host = "186.101.219.92";
@@ -55,7 +55,7 @@ static partial class Voidburn {
         if(args.Length==3 && args[0]=="--apply-update") { int parent; if(!Int32.TryParse(args[2],out parent))return 1; return ApplyClientUpdate(args[1],parent); }
         if(args.Length==2 && args[0]=="--update-health") { try { UpdateHealth(args[1]); return 0; } catch(Exception e) { Log(e); return 1; } }
         if(args.Length==3 && args[0]=="--update-verify") { try { var release=VerifyUpdate(File.ReadAllBytes(args[1])); File.WriteAllText(args[2],release.Version.ToString()); return 0; } catch(Exception e) { File.WriteAllText(args[2],e.Message); return 1; } }
-        Log(new Exception("Voidburn 2.1.12 started; "+(args.Contains("--play") ? "shortcut launch" : "setup")));
+        Log(new Exception("Voidburn 2.1.13 started; "+(args.Contains("--play") ? "shortcut launch" : "setup")));
         Application.Run(args.Contains("--play") ? (Form)new LaunchSplash(false, args.Contains("--skip-update-once")) : new SetupForm(false));
         return 0;
     }
@@ -206,4 +206,5 @@ static partial class Voidburn {
         File.WriteAllText(report,"PASS: YAML validity; new installs; preservation of other targets; stale target replacement; idempotence; malformed-file rejection; endpoint validation; .yml support; primary-file precedence; exact backups; Windows shortcut creation; official dependency download policy; pinned runtime library hashes and bootstrap hash; live HTTPS configuration; live public native handshake.\r\nNo real profile files or installed applications were changed.\r\n");
     }
 }
+
 

@@ -4,26 +4,26 @@ Windows launcher source for connecting to the Voidburn game server with RuneLite
 
 ## Download
 
-Get [Voidburn 2.1.12 for Windows](https://github.com/GazpaNova/VoidburnLauncher/releases/tag/v2.1.12). Extract the ZIP and run **VoidburnSetup.exe**, then choose **Install and Play**. Use the Voidburn desktop shortcut for later sessions.
+Get [Voidburn 2.1.13 for Windows](https://github.com/GazpaNova/VoidburnLauncher/releases/tag/v2.1.13). Extract the ZIP and run **VoidburnSetup.exe**, then choose **Install and Play**. Use the Voidburn desktop shortcut for later sessions.
 
 The installer is unsigned in Windows. Hosting it here makes the source and release files available for review. Antivirus products can still flag the download.
 
 Check the release ZIP in PowerShell:
 
 ```powershell
-Get-FileHash .\Voidburn-2.1.12-Windows.zip -Algorithm SHA256
+Get-FileHash .\Voidburn-2.1.13-Windows.zip -Algorithm SHA256
 ```
 
 The ZIP should have this SHA-256:
 
 ```text
-A8F5E26D401B8BD64364F072D05B7EE96BF21CC93849BB1346AF5FB703C23A1B
+44299CC28D21223D7528B8DAA54808047FB1BF8956B22C82C63DDFF56747505A
 ```
 
 The extracted installer should have this SHA-256:
 
 ```text
-98AB0D222265C0FB1D33066350D3D8A5CA93DC8544AD479222C3B7417FB56EE2
+250031B86A9D699397788F3D019034E7D088B670F8D4AD8CEEEFB07DC797B3B6
 ```
 
 ## What the launcher does
@@ -33,6 +33,12 @@ The extracted installer should have this SHA-256:
 - Fetches the pinned RSProx runtime libraries from the upstream CDN or the Voidburn mirror. Both sources must match the same hashes in [RuntimeFiles.txt](RuntimeFiles.txt).
 - Checks the Voidburn update feed on startup. [AutoUpdate.cs](AutoUpdate.cs) verifies the feed signature and the download's size, checksum, and executable version. This is separate from Windows code signing.
 - Login Utilities keeps a remembered session token encrypted for the current Windows account. Use **Login Utilities → Forget account** in RuneLite to clear it.
+
+## MOTD welcome panel
+
+Version 2.1.13 bundles the Voidburn MOTD plugin and configures its authenticated secure gateway endpoint. On first launch it downloads and verifies the official Eclipse Temurin Java 21 JDK (about 196 MiB), including the JAR-signing module required by RSProx. It uses this private runtime without changing system Java. Existing profile settings and other add-ons are preserved.
+
+The new plugin source is in [addons/motd](addons/motd). Its thin JAR is included as VoidburnMotd.jar. Java download pins and validation are in [JavaRuntime.cs](JavaRuntime.cs); plugin installation/profile configuration is in [MotdAddon.cs](MotdAddon.cs). This release does not claim to resolve antivirus false positives.
 
 ## Build from source
 
@@ -54,3 +60,4 @@ Enable **Show Puzzle Answer** in RuneLite under **Barrows Brothers**. The bundle
 ## Troubleshooting
 
 Setup errors are recorded in `%LOCALAPPDATA%\Voidburn\setup.log`. If you share a log, send the relevant error and omit account information and profile files.
+

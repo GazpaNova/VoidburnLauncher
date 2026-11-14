@@ -163,7 +163,9 @@ static partial class Voidburn {
         if (Hash(Resource("RevenantDropAll.jar")) != DropAllHash) throw new IOException("Bundled Drop-All addon checksum failed.");
         if (Hash(Resource("VoidburnPing.jar")) != PingHash) throw new IOException("Bundled Ping addon checksum failed.");
         if (Assembly.GetExecutingAssembly().GetManifestResourceNames().Contains("RSProxSetup.exe")) throw new IOException("Unexpected embedded dependency installer.");
+        if (Hash(Resource("VoidburnMotd.jar")) != MotdAddonHash) throw new IOException("Bundled MOTD addon checksum failed.");
         RuntimeFiles();
         File.WriteAllText(report, Assembly.GetExecutingAssembly().GetName().Version.ToString());
     }
 }
+

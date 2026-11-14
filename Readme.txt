@@ -80,3 +80,5 @@ Removes the additional remembered-login panel and sign-in dialog introduced in 2
 
 VERSION 2.1.12 - BARROWS PUZZLE HIGHLIGHT
 Barrows Brothers can highlight the answer after the puzzle shapes finish loading. Enable Show Puzzle Answer in Barrows Brothers and click the highlighted shape.
+
+Voidburn 2.1.13: adds the Voidburn welcome panel through the authenticated gateway plugin channel. The launcher installs VoidburnMotd.jar, configures its secure endpoint, and prepares a checksum-pinned Java 21 JDK required by the plugin and RSProx signing step. First launch downloads about 196 MiB of official Java files; later launches reuse them. Existing characters and profile settings are retained.

@@ -96,6 +96,7 @@ static partial class Voidburn {
                 WriteRuntimeLibrary(destination,data);
             }
         }
+        PrepareJava21(applicationDirectory, status);
         Directory.CreateDirectory(applicationDirectory);
         byte[] friendsAddon=Resource("RevenantOnlineStatus.jar");
         if(Hash(friendsAddon)!="AA4E8944B8CEFF662E936D4C0CA3355E1F882DE2FFE1885BDB1237A1F8E35E36")throw new IOException("Friends-list addon integrity check failed.");
@@ -107,6 +108,7 @@ static partial class Voidburn {
         if(Hash(hiscoresAddon)!="D8038322688D49AF50C4A271EDD2654C49E587878B83EC9C70223724E35C3498")throw new IOException("Hiscores addon integrity check failed.");
         string hiscoresPath=Path.Combine(addons,"VoidburnHiscores.jar");
         if(!File.Exists(hiscoresPath)||Hash(File.ReadAllBytes(hiscoresPath))!=Hash(hiscoresAddon))File.WriteAllBytes(hiscoresPath,hiscoresAddon);
+        InstallMotdAddon(applicationDirectory);
         InstallDropAllAddon(applicationDirectory);
         InstallPingAddon(applicationDirectory);
         InstallBundledAddon(applicationDirectory,"VoidburnBarrows.jar","5BAA80BAE3456F3B7EC5BE6FE1C5E75C5290D0BA5A8336D98191160D67EB5B22");
@@ -162,7 +164,7 @@ static partial class Voidburn {
     }
 
     internal static void LaunchDirect(string applicationDirectory,string profileDirectory,string mode,Action<string> progress) {
-        string java=Path.Combine(RSProxDir,"jdk","bin","java.exe");
+        string java=Java21Executable(applicationDirectory);
         if(!File.Exists(java))throw new IOException("The bundled Java runtime was not installed. Run Voidburn setup again.");
         Directory.CreateDirectory(profileDirectory);
         string config=Path.Combine(profileDirectory,".rsprox");Directory.CreateDirectory(config);
@@ -214,3 +216,4 @@ static partial class Voidburn {
         File.WriteAllText(report,"PASS: pinned runtime library SHA256; private proxy profile; exact Voidburn target selection; local HTTP/protocol startup; clean shutdown. No game client, player login or normal RSProx profile was used.\r\n");
     }
 }
+

@@ -46,3 +46,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Java 21 runtime: Eclipse Temurin OpenJDK 21.0.13+9 (Windows x64 JDK), downloaded from the official adoptium/temurin21-binaries release. GPLv2 with Classpath Exception; the downloaded archive retains its legal notices. Source and release: https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.13%2B9 . The JDK includes jdk.jartool required by RSProx's JAR signer. This runtime is isolated to Voidburn and does not change system Java.
+Voidburn MOTD plugin: com.voidburn.plugin, source under addons/motd; bundled thin JAR uses the running RuneLite's dependencies.

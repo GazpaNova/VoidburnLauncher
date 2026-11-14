@@ -1,0 +1,87 @@
+plugins {
+  id 'java'
+}
+
+group = 'com.voidburn'
+version = '0.1.0'
+
+repositories {
+  maven {
+    url = 'https://repo.runelite.net'
+    content { includeGroupByRegex('net\\.runelite.*') }
+  }
+  mavenCentral()
+}
+
+def runeLiteVersion = providers.gradleProperty('runeLiteVersion').get()
+
+// Dependency locking is disabled for now so a first local build on any
+// checkout can install the dependencies without a pre-generated lockfile.
+// Add `dependencyLocking { lockAllConfigurations() }` and generate the
+// lockfile with `./gradlew dependencies --write-locks` once the module's
+// dependency set is stable.
+
+dependencies {
+  // RuneLite client brings Guice (plugin DI), OkHttp (WebSocket), Gson (JSON) and
+  // SLF4J (logging) as transitive dependencies. We declare it as implementation so
+  // it's on the compile and runtime classpath here, but the player's RuneLite
+  // install provides its own copy at runtime.
+  compileOnly "net.runelite:client:${runeLiteVersion}"
+
+  compileOnly 'org.projectlombok:lombok:1.18.30'
+  annotationProcessor 'org.projectlombok:lombok:1.18.30'
+  compileOnly 'org.jetbrains:annotations:23.0.0'
+
+  // Tests need OkHttp and Gson directly; those come from RuneLite at runtime but
+  // are not on the testCompile classpath without a declaration. We pin matching
+  // versions and verify them in the lockfile.
+  testImplementation "net.runelite:client:${runeLiteVersion}"
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
+  testImplementation 'org.mockito:mockito-core:5.17.0'
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+  options.release.set(21)
+}
+
+test {
+  useJUnitPlatform()
+  systemProperty 'java.awt.headless', 'true'
+  maxHeapSize = '2g'
+  testLogging { events 'failed'; showStandardStreams = true }
+}
+
+// Distribution artifact for a launcher to bundle. The plugin's own JAR
+// contains just the plugin classes + resources; every transitive dependency
+// (Guice, OkHttp, Gson, SLF4J) comes from the RuneLite client at runtime,
+// so no shadow/shade step is needed. The launcher adds this JAR to its
+// classpath and calls
+//
+//   ExternalPluginManager.loadBuiltin(com.voidburn.plugin.VoidburnPlugin.class);
+//   RuneLite.main(args);
+//
+// to register the plugin with RuneLite's normal plugin set before launch —
+// same pattern VoidburnPluginLauncher uses in the test sources for the
+// dev workflow. See README "Bundling into a launcher".
+jar {
+  archiveBaseName = 'voidburn-plugin'
+  // Deterministic artifact: no jar entry timestamps, no reproducible-build
+  // noise. Makes a launcher's integrity check (SHA of the bundled JAR)
+  // stable across clean rebuilds from the same source commit.
+  preserveFileTimestamps = false
+  reproducibleFileOrder = true
+  manifest {
+    attributes(
+        'Implementation-Title': 'Voidburn RuneLite plugin',
+        'Implementation-Version': project.version,
+        'Implementation-Vendor': 'Voidburn',
+        // Plugin entry class — informational. ExternalPluginManager.loadBuiltin
+        // takes the Class<?> directly from the launcher's code; the manifest
+        // attribute is for tooling (jar inspection, launcher packaging
+        // scripts) that wants to know which class to load without parsing
+        // the JAR's class tree.
+        'Plugin-Class': 'com.voidburn.plugin.VoidburnPlugin',
+    )
+  }
+}
