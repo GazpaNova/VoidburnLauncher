@@ -11,6 +11,7 @@ import net.runelite.api.MenuAction;
 import net.runelite.api.Player;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.events.OverlayMenuClicked;
@@ -135,21 +136,7 @@ public class VoidburnPlugin extends Plugin {
         openConnection();
     }
 
-    /**
-     * Auto-pair, step 1: on game login, fill the username from the client
-     * if the player hasn't set it. The player's display name only
-     * becomes available on LOGGED_IN, not on earlier states —
-     * Client.getLocalPlayer() returns null before login.
-     *
-     * Liveness: if getLocalPlayer() is not yet populated when this event
-     * fires (RuneLite's deferred-init ordering can race the first
-     * LOGGED_IN with Client.getLocalPlayer()'s own first non-null
-     * publication), the capture is NOT one-shot. tryFillUsername() is
-     * also called from onChatMessage, so when the token arrives (which
-     * the gateway always sends after login completes, by which time the
-     * local player is populated), the plugin has another shot at
-     * filling the username. v1 review P2 regression.
-     */
+    /** Capture immediately when possible; game ticks retry delayed initialization. */
     @Subscribe
     public void onGameStateChanged(GameStateChanged event) {
         if (event.getGameState() != GameState.LOGGED_IN) return;
@@ -164,6 +151,15 @@ public class VoidburnPlugin extends Plugin {
      * handler and the chat-token handler — the next call picks up where
      * the previous no-op left off.
      */
+    /** Login and token chat can both arrive before the local player/name.
+     * Retry on logged-in ticks; matching names cause no writes or reconnects.
+     */
+    @Subscribe
+    public void onGameTick(GameTick event) {
+        if (!config.autoPair() || client.getGameState() != GameState.LOGGED_IN) return;
+        tryFillUsername();
+    }
+
     private void tryFillUsername() {
         Player local = client.getLocalPlayer();
         if (local == null) return;
@@ -181,15 +177,8 @@ public class VoidburnPlugin extends Plugin {
      * sources don't match, so a player typing the prefix by hand into
      * a public channel can't poison the config.
      *
-     * Also catches a deferred-username case: the gateway always sends
-     * the token line after login has fully completed, so by the time
-     * we see it, Client.getLocalPlayer() is reliably populated. A
-     * tryFillUsername() call here recovers from a null-getLocalPlayer
-     * race at LOGGED_IN. The two writes are independent
-     * ConfigManager.setConfiguration calls and the
-     * {@link #onConfigChanged} subscriber reconnects for each; the
-     * gateway's attach reads both values from a single config read, so
-     * ordering them within the same tick is fine.
+     * Token arrival can also precede local-player initialization. Store it now;
+     * onGameTick retries username capture once the player and name exist.
      *
      * The write triggers the usual reconnect via onConfigChanged, and
      * the attach then authenticates against the fresh mint the gateway
@@ -201,10 +190,7 @@ public class VoidburnPlugin extends Plugin {
         Optional<String> token = AutoPair.tokenToWrite(
             config.autoPair(), event.getMessage(), config.token());
         if (token.isEmpty()) return;
-        // Recover a username that the LOGGED_IN handler couldn't capture
-        // because getLocalPlayer was still null at that event (v1 review
-        // P2). The token always arrives post-login, so by now the Client
-        // has a local player.
+        // Capture now if possible; game ticks retry after delayed initialization.
         tryFillUsername();
         log.info("Voidburn plugin: auto-pair captured session token from chat");
         configManager.setConfiguration(VoidburnConfig.GROUP, VoidburnConfig.KEY_TOKEN, token.get());
