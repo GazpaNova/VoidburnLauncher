@@ -4,14 +4,14 @@ Windows launcher source for connecting to the Voidburn game server with RuneLite
 
 ## Download
 
-Get [Voidburn 2.1.13 for Windows](https://github.com/GazpaNova/VoidburnLauncher/releases/tag/v2.1.13). Extract the ZIP and run **VoidburnSetup.exe**, then choose **Install and Play**. Use the Voidburn desktop shortcut for later sessions.
+Get [Voidburn 2.1.16 for Windows](https://github.com/GazpaNova/VoidburnLauncher/releases/tag/v2.1.16). Extract the ZIP and run **VoidburnSetup.exe**, then choose **Install and Play**. Use the Voidburn desktop shortcut for later sessions.
 
 The installer is unsigned in Windows. Hosting it here makes the source and release files available for review. Antivirus products can still flag the download.
 
 Check the release ZIP in PowerShell:
 
 ```powershell
-Get-FileHash .\Voidburn-2.1.13-Windows.zip -Algorithm SHA256
+Get-FileHash .\Voidburn-2.1.16-Windows.zip -Algorithm SHA256
 ```
 
 The ZIP should have this SHA-256:
@@ -36,7 +36,7 @@ The extracted installer should have this SHA-256:
 
 ## MOTD welcome panel
 
-Version 2.1.13 bundles the Voidburn MOTD plugin and configures its authenticated secure gateway endpoint. On first launch it downloads and verifies the official Eclipse Temurin Java 21 JDK (about 196 MiB), including the JAR-signing module required by RSProx. It uses this private runtime without changing system Java. Existing profile settings and other add-ons are preserved.
+Version 2.1.16 bundles the Voidburn MOTD plugin and configures its authenticated secure gateway endpoint. On first launch it downloads and verifies the official Eclipse Temurin Java 21 JDK (about 196 MiB), including the JAR-signing module required by RSProx. It uses this private runtime without changing system Java. Existing profile settings and other add-ons are preserved.
 
 The new plugin source is in [addons/motd](addons/motd). Its thin JAR is included as VoidburnMotd.jar. Java download pins and validation are in [JavaRuntime.cs](JavaRuntime.cs); plugin installation/profile configuration is in [MotdAddon.cs](MotdAddon.cs). This release does not claim to resolve antivirus false positives.
 

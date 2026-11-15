@@ -146,3 +146,7 @@ login's chat message.
 
 Part of Voidburn (same license as the rest of this repo). The RuneLite
 client dependency keeps its own license (BSD-2, net.runelite).
+
+### Renderer assets
+
+The renderer uses explicit scalable fonts, the bundled Voidburn logo, RuneLite skill icons, and the browser's 480x460 panel coordinates. The bundled motd-defaults.json supplies the same static tier definitions as the deployed browser layout; update it when changing those layout tiers. Server-sent text remains live. Rendering tests write previews at 765x503 and 1024x768 and check fullscreen coverage and Play hit alignment.

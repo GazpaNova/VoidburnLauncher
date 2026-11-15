@@ -14,7 +14,7 @@ using YamlDotNet.RepresentationModel;
 
 [assembly: AssemblyTitle("Voidburn Setup and Launcher")]
 [assembly: AssemblyDescription("Installs RSProx and configures the Voidburn RuneLite connection")]
-[assembly: AssemblyVersion("2.1.15.0")]
+[assembly: AssemblyVersion("2.1.16.0")]
 
 static partial class Voidburn {
     internal const string Host = "186.101.219.92";
@@ -55,7 +55,7 @@ static partial class Voidburn {
         if(args.Length==3 && args[0]=="--apply-update") { int parent; if(!Int32.TryParse(args[2],out parent))return 1; return ApplyClientUpdate(args[1],parent); }
         if(args.Length==2 && args[0]=="--update-health") { try { UpdateHealth(args[1]); return 0; } catch(Exception e) { Log(e); return 1; } }
         if(args.Length==3 && args[0]=="--update-verify") { try { var release=VerifyUpdate(File.ReadAllBytes(args[1])); File.WriteAllText(args[2],release.Version.ToString()); return 0; } catch(Exception e) { File.WriteAllText(args[2],e.Message); return 1; } }
-        Log(new Exception("Voidburn 2.1.15 started; "+(args.Contains("--play") ? "shortcut launch" : "setup")));
+        Log(new Exception("Voidburn 2.1.16 started; "+(args.Contains("--play") ? "shortcut launch" : "setup")));
         Application.Run(args.Contains("--play") ? (Form)new LaunchSplash(false, args.Contains("--skip-update-once")) : new SetupForm(false));
         return 0;
     }

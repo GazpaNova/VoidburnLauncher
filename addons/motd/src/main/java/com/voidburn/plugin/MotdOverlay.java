@@ -34,24 +34,19 @@ import net.runelite.client.ui.overlay.OverlayPriority;
  * authoritatively. Dismissed is cleared when the plugin stops the
  * underlying connection (new login → new session → new chance to see MOTD).
  *
- * Layout (not pixel-perfect to the browser version — a canvas-style render
- * is a later phase): semi-transparent scrim across the whole viewport,
- * centered 480x460-ish panel with Voidburn-ish palette, title, tagline,
- * each Section's heading-and-body drawn stacked, then footer links. Font
- * is Graphics2D's Java default; RuneLite's FontManager fonts would match
- * the plugin aesthetic more closely, but adding them is a style patch, not
- * a milestone one.
+ * Uses the browser panel geometry, bundled logo/rate definition, RuneLite skill
+ * icons and an explicit scalable font. Dynamic text is supplied by the server.
  */
 public class MotdOverlay extends Overlay {
     /** Dark scrim color for the viewport-fill behind the panel. */
-    private static final Color SCRIM = new Color(0, 0, 0, 180);
+    private static final Color SCRIM = new Color(0x14, 0x10, 0x0b);
 
     /** Panel background and chrome colors. Approximate Voidburn palette. */
-    private static final Color PANEL_BG = new Color(0x14, 0x10, 0x0b);
-    private static final Color PANEL_BORDER = new Color(0x3a, 0x31, 0x25);
-    private static final Color TITLE_COLOR = new Color(0xd4, 0xb8, 0x1b);
+    private static final Color PANEL_BG = new Color(0x19, 0x15, 0x20);
+    private static final Color PANEL_BORDER = new Color(0x6b, 0x16, 0xe8);
+    private static final Color TITLE_COLOR = new Color(0x2f, 0xd4, 0xb4);
     private static final Color BODY_COLOR = new Color(0xe8, 0xde, 0xd0);
-    private static final Color MUTED_COLOR = new Color(0xb8, 0xab, 0x94);
+    private static final Color MUTED_COLOR = new Color(0x2f, 0xd4, 0xb4);
 
     private static final int PANEL_WIDTH = 480;
     private static final int PANEL_HEIGHT = 460;
@@ -91,8 +86,8 @@ public class MotdOverlay extends Overlay {
 
     /** Voidburn purple for the Play button fill; gold for its label. */
     private static final Color PLAY_BUTTON_FILL = new Color(0x6b, 0x16, 0xe8, 160);
-    private static final Color PLAY_BUTTON_BORDER = new Color(0xd4, 0xb8, 0x1b);
-    private static final Color PLAY_BUTTON_LABEL = new Color(0xd4, 0xb8, 0x1b);
+    private static final Color PLAY_BUTTON_BORDER = new Color(0x2f, 0xd4, 0xb4);
+    private static final Color PLAY_BUTTON_LABEL = new Color(0x2f, 0xd4, 0xb4);
 
     /** Text drawn in the Play button. */
     private static final String PLAY_BUTTON_LABEL_TEXT = "Enter Voidburn";
@@ -248,22 +243,7 @@ public class MotdOverlay extends Overlay {
         g.setColor(PANEL_BORDER);
         g.drawRect(px, py, pw - 1, ph - 1);
 
-        int contentX = px + PANEL_PADDING;
-        int contentW = pw - PANEL_PADDING * 2;
-        int y = py + PANEL_PADDING + 14;
-
-        y = drawLine(g, p.title(), contentX, y, contentW, TITLE_COLOR, 18, true);
-        y = drawLine(g, p.tagline(), contentX, y + 6, contentW, MUTED_COLOR, 12, false);
-        y += 10;
-        for (MotdPresentation.Section s : p.sections()) {
-            if (!s.heading().isEmpty()) {
-                y = drawLine(g, s.heading(), contentX, y, contentW, TITLE_COLOR, 13, true);
-            }
-            if (!s.body().isEmpty()) {
-                y = drawWrapped(g, s.body(), contentX, y + 2, contentW, BODY_COLOR, 12);
-            }
-            y += 8;
-        }
+        MotdArtwork.draw(g, p, px, py);
         // Footer URLs: draw at the EXACT panel-relative coordinates
         // computeHitRegions uses for the hit rectangles (x=16, width=
         // URL_FOOTER_WIDTH, fixed rows at y=398/414/430 inside the panel,
@@ -299,7 +279,7 @@ public class MotdOverlay extends Overlay {
     private void drawFooterUrl(Graphics2D g, int px, int py,
                                int footerYInPanel, String label) {
         if (label == null || label.isEmpty()) return;
-        g.setFont(g.getFont().deriveFont(java.awt.Font.PLAIN, 11f));
+        g.setFont(MotdArtwork.font(11, false));
         g.setColor(MUTED_COLOR);
         FontMetrics fm = g.getFontMetrics();
         String clipped = clip(label, fm, URL_FOOTER_WIDTH);
@@ -372,7 +352,7 @@ public class MotdOverlay extends Overlay {
         g.setColor(PLAY_BUTTON_BORDER);
         g.drawRect(x, y, PLAY_BUTTON_WIDTH - 1, PLAY_BUTTON_HEIGHT - 1);
         g.setColor(PLAY_BUTTON_LABEL);
-        g.setFont(g.getFont().deriveFont(java.awt.Font.BOLD, 13f));
+        g.setFont(MotdArtwork.font(13, true));
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(PLAY_BUTTON_LABEL_TEXT);
         int tx = x + (PLAY_BUTTON_WIDTH - textWidth) / 2;

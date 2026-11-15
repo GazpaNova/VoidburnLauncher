@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 static partial class Voidburn {
-    internal const string MotdAddonHash = "32617E25A15FB5A697E052E71D2464F1768B35F51FB0ED64D8F1F08DF7A5B32B";
+    internal const string MotdAddonHash = "A50F69CA5D6A11D6E5668167CA4C0EA918D20DC3CB6DDD92691850EEDF9E95B7";
     internal const string MotdGatewayUrl = "wss://osrs.voidburn.net/voidburn-plugin/plugin";
     internal static void InstallMotdAddon(string applicationDirectory) {
         InstallBundledAddon(applicationDirectory, "VoidburnMotd.jar", MotdAddonHash);
