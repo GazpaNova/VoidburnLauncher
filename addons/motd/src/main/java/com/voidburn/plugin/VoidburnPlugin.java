@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
     name = "Voidburn",
     description = "Renders Voidburn custom interfaces (MOTD, custom shops, teleport menus)",
     tags = {"voidburn", "rsps", "motd"},
-    enabledByDefault = false
+    enabledByDefault = true
 )
 public class VoidburnPlugin extends Plugin {
     private static final Logger log = LoggerFactory.getLogger(VoidburnPlugin.class);
